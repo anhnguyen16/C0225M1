@@ -19,6 +19,8 @@ public class CountryDemo {
     private static List<Country> countries = new ArrayList<>();
 
     public static void main(String[] args) {
+
+        // try-with-resources to ensure the BufferedReader is closed automatically
         try (FileReader fileReader = new FileReader("data/countries.csv");
              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             String line;
@@ -31,9 +33,9 @@ public class CountryDemo {
                 countries.add(country);
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Khong tim thay tap tin: " + e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Co loi khi doc tap tin: " + e.getMessage());
         }
         System.out.println("===== UNG DUNG QUAN LY QUOC GIA =====");
         System.out.println("1. Danh sach quoc gia");
@@ -53,7 +55,11 @@ public class CountryDemo {
                     displayCountries();
                     break;
                 case 2:
-                    addCountry();
+                    try {
+                        addCountry();
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 0:
                     System.out.println("Cam on ban da su dung ung dung!");
@@ -78,6 +84,9 @@ public class CountryDemo {
         int id = Integer.parseInt(scanner.nextLine());
         System.out.println("Moi nhap ma quoc gia:");
         String code = scanner.nextLine();
+        if (code.isEmpty()) {
+            throw new RuntimeException("Ma quoc gia khong duoc de trong!");
+        }
         System.out.println("Moi nhap ten quoc gia:");
         String name = scanner.nextLine();
 
